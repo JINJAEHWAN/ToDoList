@@ -54,5 +54,11 @@ public class ScheduleContoller {
 
         return responselist;
     }
+    @GetMapping("/todo/{id}")
+    public ScheduleResponseDto getTodoId(@PathVariable Long id){
+        Schedule sch = schedList.get(id);
 
+        ScheduleResponseDto scheduleResponseDto = new ScheduleResponseDto(sch);
+        return  scheduleResponseDto;
+    }
 }
