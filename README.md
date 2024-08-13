@@ -10,4 +10,4 @@
 |일정삭제|DELETE|/api/TODO/{TODOId}|요청PARAM|-|200:정상삭제|
 
 
-![list](https://github.com/user-attachments/assets/38814072-fcb8-420a-8fe8-5bec16b336b4)
+![list](https://github.com/user-attachments/assets/d3622ea7-77ff-48ae-83c9-5ea8189e0d23)
