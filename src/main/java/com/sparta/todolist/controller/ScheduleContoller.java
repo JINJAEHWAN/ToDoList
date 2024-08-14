@@ -1,8 +1,10 @@
 package com.sparta.todolist.controller;
 
+import com.mysql.cj.jdbc.ConnectionImpl;
 import com.sparta.todolist.dto.ScheduleRequestDto;
 import com.sparta.todolist.dto.ScheduleResponseDto;
 import com.sparta.todolist.entity.Schedule;
+import com.sparta.todolist.tablerowmapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -40,14 +43,12 @@ public class ScheduleContoller {
         jdbctemplate.update( con -> {
                     PreparedStatement preparedStatement = con.prepareStatement(sql,
                             Statement.RETURN_GENERATED_KEYS);
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
                     preparedStatement.setString(1, schedule.getManagerName());
                     preparedStatement.setString(2, schedule.getTodo());
                     preparedStatement.setString(3, schedule.getPassword());
                     preparedStatement.setObject(4, schedule.getCreatedAt());
                     preparedStatement.setObject(5, schedule.getUpdatedAt());
-
-
                     return preparedStatement;
                 },
                 keyHolder);
@@ -62,37 +63,26 @@ public class ScheduleContoller {
     @GetMapping("/todo")
     public List<ScheduleResponseDto> getTodo(){
         // DB 조회
-        String sql = "SELECT * FROM memo";
+        String sql = "SELECT * FROM schedule";
 
-        return jdbctemplate.query(sql, new RowMapper<ScheduleResponseDto>() {
-            @Override
-            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                // SQL 의 결과로 받아온
-                Long id = rs.getLong("id");
-                String managerName = rs.getString("managerName");
-                LocalDateTime createdAt = rs.getTimestamp("createdAt").toLocalDateTime();
-                LocalDateTime updatedAt = rs.getTimestamp("updatedAt").toLocalDateTime();
-                String password = rs.getString("password");
-                String todo = rs.getString("todo");
-                return new ScheduleResponseDto(id, managerName, createdAt, updatedAt, password, todo);
-            }
-        });
+        return jdbctemplate.query(sql, new tablerowmapper());
     }
-//    @GetMapping("/todo/{id}")
-//    public ScheduleResponseDto getTodoId(@PathVariable Long id){
-//        Schedule sch = schedList.get(id);
-//
-//        ScheduleResponseDto scheduleResponseDto = new ScheduleResponseDto(sch);
-//        return  scheduleResponseDto;
-//    }
-//    @GetMapping("/todo/star")
-//    public List<ScheduleResponseDto> getTodoStar(@PathVariable String managerName
-//            ,@PathVariable LocalDateTime updateAt){
-//        updateAt.format(DateTimeFormatter.ofPattern("YYYY-MM-dd"));
-//
-//        return null;
-//    }
 
-    //managerName과 updateAt을 동시에 처리하기 위해서 어떻게 해야 할까?
-    //둘 다 받을 수 있고, 둘 중 하나만 받을 수 있음.
+    @GetMapping("/todo/find")
+    public List<ScheduleResponseDto> getTodoName(@RequestParam String manager_name
+            , @RequestParam String updated_at){
+
+        //
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa");
+//        format.format(updated_at);
+
+        //DateTimeFormatter format = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate updated = LocalDate.parse(updated_at,format);
+        System.out.println(updated);
+        String sql = "SELECT * FROM schedule WHERE manager_name = ? OR updated_at = ?";
+
+        return jdbctemplate.query(sql, new tablerowmapper(), manager_name, updated
+                );
+    }
 }
