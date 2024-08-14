@@ -80,7 +80,8 @@ public class ScheduleContoller {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate updated = LocalDate.parse(updated_at,format);
         System.out.println(updated);
-        String sql = "SELECT * FROM schedule WHERE manager_name = ? OR updated_at = ?";
+        String sql = "SELECT * FROM schedule WHERE manager_name = ? OR updated_at = ?" +
+                "ORDER BY updated_at DESC";
 
         return jdbctemplate.query(sql, new tablerowmapper(), manager_name, updated
                 );
