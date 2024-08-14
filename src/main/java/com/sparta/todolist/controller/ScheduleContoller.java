@@ -43,7 +43,6 @@ public class ScheduleContoller {
         jdbctemplate.update( con -> {
                     PreparedStatement preparedStatement = con.prepareStatement(sql,
                             Statement.RETURN_GENERATED_KEYS);
-
                     preparedStatement.setString(1, schedule.getManagerName());
                     preparedStatement.setString(2, schedule.getTodo());
                     preparedStatement.setString(3, schedule.getPassword());
@@ -70,13 +69,7 @@ public class ScheduleContoller {
 
     @GetMapping("/todo/find")
     public List<ScheduleResponseDto> getTodoName(@RequestParam String manager_name
-            , @RequestParam String updated_at){
-
-        //
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm aaa");
-//        format.format(updated_at);
-
-        //DateTimeFormatter format = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            , @RequestParam(required = false) String updated_at){
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate updated = LocalDate.parse(updated_at,format);
         System.out.println(updated);
@@ -86,4 +79,23 @@ public class ScheduleContoller {
         return jdbctemplate.query(sql, new tablerowmapper(), manager_name, updated
                 );
     }
+
+    @PutMapping("/todo/retouch")
+    public ScheduleResponseDto updateMemo(@RequestParam Long id,@RequestParam String manager_name1
+            ,@RequestParam String todo, @RequestParam String password) {
+        // 해당 password가 DB에 맞는지 확인
+        // 할 일 내용 수정, 담당자명 수정
+        // 수정일을 수정시점으로 변경
+        // 정보를 반환받아서 확인
+        LocalDateTime updatedAt = LocalDateTime.now();
+        String sql = "UPDATE schedule SET manager_name =?, todo = ?, updated_at= ? WHERE id = ?";//
+        int result =jdbctemplate.update(sql, manager_name1, todo, updatedAt, id);
+        if(result<1){
+            throw new IllegalArgumentException();
+        }
+        String sql2 = "select * from schedule where id = ?";
+        return jdbctemplate.queryForObject(sql2, new tablerowmapper(), id);
+
+    }
+
 }
