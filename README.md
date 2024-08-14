@@ -6,7 +6,7 @@
 |------|---|---|---|---|---|
 |일정등록|POST|api/todo|요청BODY|등록정보|200:정상등록|
 |일정조회|GET|/api/todo/find|요청PARAM|단건응답정보|200:정상조회|
-|일정수정|PUT|/api/todo/insert|요청BODY|수정정보|200:정상수정|
+|일정수정|PUT|/api/todo/retouch|요청BODY|수정정보|200:정상수정|
 |일정삭제|DELETE|/api/todo/delete|요청PARAM|-|200:정상삭제|
 
 
