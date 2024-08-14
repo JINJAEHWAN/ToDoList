@@ -81,7 +81,7 @@ public class ScheduleContoller {
     }
 
     @PutMapping("/todo/retouch")
-    public ScheduleResponseDto updateMemo(@RequestParam Long id,@RequestParam String manager_name1
+    public ScheduleResponseDto updateTodo(@RequestParam Long id,@RequestParam String manager_name1
             ,@RequestParam String todo, @RequestParam String password) {
         // 해당 password가 DB에 맞는지 확인
         // 할 일 내용 수정, 담당자명 수정
@@ -96,6 +96,15 @@ public class ScheduleContoller {
         String sql2 = "select * from schedule where id = ?";
         return jdbctemplate.queryForObject(sql2, new tablerowmapper(), id);
 
+    }
+
+    @DeleteMapping("/todo/delete")
+    public void deleteTodo(@RequestParam Long id){
+        String sql = "DELETE FROM schedule where id = ?";
+        int result =jdbctemplate.update(sql,id);
+        if(result<1){
+            throw new IllegalArgumentException();
+        }
     }
 
 }
