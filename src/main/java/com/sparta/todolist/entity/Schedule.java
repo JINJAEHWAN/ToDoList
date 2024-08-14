@@ -12,15 +12,15 @@ public class Schedule {
     private Long id;
     private String managerName;
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
-    private int pwd;
+    private LocalDateTime updatedAt;
+    private String password;
     private String todo;
 
     public Schedule(ScheduleRequestDto requestDto) {
         this.managerName = requestDto.getManagerName();
         this.createdAt = requestDto.getCreatedAt();
-        this.updateAt = requestDto.getUpdateAt();
-        this.pwd = requestDto.getPwd();
+        this.updatedAt = requestDto.getUpdatedAt();
+        this.password = requestDto.getPassword();
         this.todo = requestDto.getTodo();
     }
 }

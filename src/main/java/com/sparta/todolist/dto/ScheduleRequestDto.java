@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class ScheduleRequestDto {
     private String managerName;
     private LocalDateTime createdAt =LocalDateTime.now();
-    private LocalDateTime updateAt= LocalDateTime.now();
-    private int pwd;
+    private LocalDateTime updatedAt = LocalDateTime.now();
+    private String password;
     private String todo;
 }
