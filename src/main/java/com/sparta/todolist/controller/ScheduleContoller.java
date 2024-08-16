@@ -98,6 +98,7 @@ public class ScheduleContoller {
 
     }
 
+
     @DeleteMapping("/todo/delete")
     public void deleteTodo(@RequestParam Long id){
         String sql = "DELETE FROM schedule where id = ?";
@@ -106,5 +107,4 @@ public class ScheduleContoller {
             throw new IllegalArgumentException();
         }
     }
-
 }
